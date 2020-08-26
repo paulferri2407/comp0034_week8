@@ -27,7 +27,7 @@ def signup():
             flash(f'Error, unable to register {form.email.data}. ', 'error')
             return redirect(url_for('auth.signup'))
         return redirect(url_for('main.index'))
-    return render_template('signup_no_helper.html', title='Sign Up', form=form)
+    return render_template('signup.html', form=form)
 
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
@@ -37,7 +37,7 @@ def login():
         # Set the session cookie with a value for email address.
         session['name'] = request.form['email']
         return redirect(url_for('main.index', name=session['name']))
-    return render_template('login.html', title='Login', form=form)
+    return render_template('login.html', form=form)
 
 
 @auth_bp.route('/logout')

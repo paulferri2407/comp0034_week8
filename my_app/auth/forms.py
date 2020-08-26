@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField
+from wtforms import StringField, PasswordField, BooleanField
 from wtforms.fields.html5 import EmailField
 from wtforms.validators import DataRequired, EqualTo, ValidationError
 
@@ -23,3 +23,14 @@ class SignupForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = EmailField(label='Email address', validators=[DataRequired()])
     password = PasswordField(label='Password', validators=[DataRequired()])
+    remember = BooleanField(label='Remember me')
+
+    def validate_email(self, email):
+        user = User.query.filter_by(email=email.data).first()
+        if user is None:
+            raise ValidationError('No account found with that email address.')
+
+    def validate_password(self, password):
+        user = User.query.filter_by(email=self.email.data).first()
+        if not user.check_password(password.data):
+            raise ValidationError('Incorrect password.')
