@@ -1,6 +1,6 @@
-# Cookies
+# Using cookies in Flask
 
-This examples works through the following steps:
+This example works through the following steps:
 
 1. Create a cookie in the signup route as soon as a new user has been successfully created. The cookie should use the value of the first_name field from the form to create a cookie called name. 
 2. Add a new route to delete the cookie, this is just so that we can see the effect on the index page after the cookie is deleted. To delete a cookie, you set its expiration as a date in the past.
