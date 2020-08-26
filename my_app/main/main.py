@@ -4,5 +4,5 @@ main_bp = Blueprint('main', __name__)
 
 
 @main_bp.route('/')
-def index():
-    return render_template('index.html', title="Home page")
+def index(name=''):
+    return render_template('index.html', title="Home page", name=name)
