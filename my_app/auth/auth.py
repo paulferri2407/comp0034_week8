@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, request
+from flask import Blueprint, render_template, flash, redirect, url_for, request, session
 from sqlalchemy.exc import IntegrityError
 
 from my_app import db
@@ -33,7 +33,15 @@ def signup():
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():
-        name = form.email.data
-        return f"Hello, {name}. You are logged in."
+    if request.method == "POST" and form.validate_on_submit():
+        # Set the session cookie with a value for email address.
+        session['name'] = request.form['email']
+        return redirect(url_for('main.index', name=session['name']))
     return render_template('login.html', title='Login', form=form)
+
+
+@auth_bp.route('/logout')
+def logout():
+    # Demonstration of sessions. Remove the email from the session if it's there.
+    session.pop('name', None)
+    return redirect(url_for('main.index'))

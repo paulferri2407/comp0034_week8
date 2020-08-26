@@ -8,6 +8,13 @@ This example works through the following steps:
 4. Signup a new user. You should be directed to the `index` page after a successful signup which should have the content "Welcome <name>".
 5. Go to http://127.0.0.1:5000/delete_cookie. You should be directed to the `index` page which should now display "Welcome".
 
+A change has been made to the `main.index` route to allow a `name` parameter to be passed:
+```python
+@main_bp.route('/')
+@main_bp.route('/<name>')
+def index(name=''):
+    return render_template('index.html', title="Home page", name=name)
+```
 
 ## 1. Create a cookie in the signup route 
 

@@ -1,8 +1,12 @@
-Add the required helper functions in auth/routes.py
-Add the routes for login and logout
-Add a link to login/logout to the navbar in base.html
-Sign up a new user. Login with that user. The navbar link should have changed to logout and your name should be displayed on the home page.
-Close the browser and re-open. You should no longer be logged in.
+# Using Flask-Login
+
+In this activity you will:
+
+1. Configure the application to use Flask-Login
+2. Add the required helper functions
+3. Add the routes for login and logout
+4. Add login/logout to the navbar
+5. Require a user to be logged in to access the community pages
 
 
 
