@@ -23,7 +23,7 @@ def create_app(config_classname):
 
     with app.app_context():
         # db.Model.metadata.reflect(db.engine)
-        from my_app.models import User
+        from my_app.models import User, Country
         db.create_all()
 
         from dash_app.dash import init_dashboard

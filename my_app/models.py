@@ -19,3 +19,12 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+class Country(db.Model):
+    __tablename__ = "country"
+    id = db.Column(db.Integer, primary_key=True)
+    country_name = db.Column(db.Text)
+
+    def __repr__(self):
+        return self.country_name
