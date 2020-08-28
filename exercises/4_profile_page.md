@@ -60,7 +60,7 @@ The fields for a profile are:
 - country: [QuerySelectField](http://wtforms.simplecodes.com/docs/0.6/ext.html#module-wtforms.ext.sqlalchemy.fields), optional
 - bio: TextAreaField, optional
 
-For the country field a list of countries has been added to example.sqlite in the country table. If you have deleted example.sqlite then run the Flask app which will generate the database. You can then add the country table by running the python file `data/add_countries_to_db.py`.
+For the country field a list of countries has been added to example.sqlite in the country table. The code to add this is in `__init__.py`.
 
 You should be able to work out how to create a form with the username and bio fields. 
 
