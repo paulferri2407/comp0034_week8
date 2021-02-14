@@ -8,7 +8,7 @@ class Config(object):
     SECRET_KEY = 'q44II1qxOHIiuDobNoLLPQ'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DATA_PATH = Path(__file__).parent.parent.joinpath("data")
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + str(DATA_PATH.joinpath('example.db'))
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + str(DATA_PATH.joinpath('example.sqlite'))
 
 
 class ProductionConfig(Config):
