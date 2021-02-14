@@ -10,7 +10,7 @@ csrf = CSRFProtect()
 
 def create_app(config_classname):
     """
-    Initialise the Flask application.
+    Initialise and configure the Flask application.
     :type config_classname: Specifies the configuration class
     :rtype: Returns a configured Flask object
     """
@@ -18,24 +18,18 @@ def create_app(config_classname):
     app.config.from_object(config_classname)
 
     db.init_app(app)
-    # login_manager.init_app(app)
+    login_manager.init_app(app)
     csrf.init_app(app)
 
     with app.app_context():
-        # db.Model.metadata.reflect(db.engine)
-        from my_app.models import User, Country
-        db.create_all()
-
+        # Import Dash application
         from dash_app.dash import init_dashboard
         app = init_dashboard(app)
 
-    from my_app.main.main import main_bp
+    from my_app.main.routes import main_bp
     app.register_blueprint(main_bp)
 
-    from my_app.community.community import community_bp
+    from my_app.community.routes import community_bp
     app.register_blueprint(community_bp)
-
-    from my_app.auth.auth import auth_bp
-    app.register_blueprint(auth_bp)
 
     return app

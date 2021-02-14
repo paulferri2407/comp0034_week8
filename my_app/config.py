@@ -1,30 +1,27 @@
 """Flask config class."""
-import pathlib
+from pathlib import Path
 
 
 class Config(object):
-    """Set Flask base configuration"""
-    SECRET_KEY = 'dfdQbTOExternjy5xmCNaA'  # Replace with your own secret key! This should not be visible to others.
-    DATA_PATH = pathlib.Path(__file__).parent.parent.joinpath("data")
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + str(DATA_PATH.joinpath('example.sqlite'))
+    """ Sets the Flask base configuration that is common to all environments. """
+    DEBUG = False
+    SECRET_KEY = 'q44II1qxOHIiuDobNoLLPQ'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    DATA_PATH = Path('data')
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + str(DATA_PATH.joinpath('example.sqlite'))
 
 
-class ProdConfig(Config):
-    ENV = 'production' # Warning: this is not the recommended method but should suffice for our app
-    DEBUG = False
-    TESTING = False
+class ProductionConfig(Config):
+    ENV = 'production'
 
 
-class TestConfig(Config):
-    ENV = 'testing'
-    DEBUG = False
-    TESTING = True
+class DevelopmentConfig(Config):
+    ENV = 'development'
+    DEBUG = True
     SQLALCHEMY_ECHO = True
 
 
-class DevConfig(Config):
-    ENV = 'development'
-    DEBUG = True
-    TESTING = False
+class TestingConfig(Config):
+    ENV = 'testing'
+    TESTING = True
     SQLALCHEMY_ECHO = True
