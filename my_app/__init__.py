@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import CSRFProtect
 
 db = SQLAlchemy()
-login_manager = LoginManager()
+# login_manager = LoginManager()
 csrf = CSRFProtect()
 
 
@@ -18,11 +18,16 @@ def create_app(config_classname):
     app.config.from_object(config_classname)
 
     db.init_app(app)
-    login_manager.init_app(app)
+    # login_manager.init_app(app)
     csrf.init_app(app)
 
     with app.app_context():
-        # Import Dash application
+        from my_app.models import User
+        db.create_all()
+
+        # Uncomment the following if you want to experiment with reflection
+        # db.Model.metadata.reflect(bind=db.engine)
+
         from dash_app.dash import init_dashboard
         app = init_dashboard(app)
 
@@ -31,5 +36,8 @@ def create_app(config_classname):
 
     from my_app.community.routes import community_bp
     app.register_blueprint(community_bp)
+
+    from my_app.auth.routes import auth_bp
+    app.register_blueprint(auth_bp)
 
     return app
