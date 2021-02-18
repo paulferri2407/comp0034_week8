@@ -123,7 +123,7 @@ from flask import session
 @auth_bp.route('/logout')
 def logout():
     session.pop('name', None)
-    return redirect(url_for('index'))
+    return redirect(url_for('main.index'))
 ```
 
 ### 4. Test that it works and view the session cookie that is set
