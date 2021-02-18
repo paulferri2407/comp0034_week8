@@ -15,7 +15,7 @@ session data.
 
 ### How sessions are established
 
-<img alt="sessions" src="img/session.png" width="600" height="600">
+<img alt="sessions" src="img/session.png" width="500">
 
 - Client's browser makes an initial request to the server.
 - Server notes client's IP address/browser, stores some local session data, and sends a session ID back to client
