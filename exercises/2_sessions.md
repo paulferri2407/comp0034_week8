@@ -4,8 +4,8 @@
 
 ### What are sessions?
 
-'Session' is an abstract concept to represent a series of HTTP requests and responses between a specific Web browser and
-server HTTP doesn't support the notion of a session, but Python does.
+'Session' is an abstract concept to represent a series of HTTP requests and responses between a specific web browser and
+server. HTTP doesn't support the notion of a session, but Python does.
 
 A cookie is data stored on the client; a session's data is stored on the server (only 1 session per client).
 
