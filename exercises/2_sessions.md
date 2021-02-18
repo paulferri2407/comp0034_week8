@@ -120,11 +120,10 @@ The route returns to the home page so we don't need to create a logout template.
 from flask import session
 
 
-@app.route('/logout')
+@auth_bp.route('/logout')
 def logout():
-   # remove the username from the session if it's there
-   session.pop('name', None)
-   return redirect(url_for('index'))
+    session.pop('name', None)
+    return redirect(url_for('index'))
 ```
 
 ### 4. Test that it works and view the session cookie that is set
