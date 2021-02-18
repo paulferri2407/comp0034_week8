@@ -22,3 +22,10 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+class LocalAuthority(db.Model):
+    __tablename__ = 'local_authority'
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.Text, nullable=False)
+    area = db.Column(db.Text, nullable=False)

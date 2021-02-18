@@ -1,3 +1,6 @@
+from pathlib import Path
+
+import pandas as pd
 from flask import Flask
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
@@ -22,11 +25,17 @@ def create_app(config_classname):
     csrf.init_app(app)
 
     with app.app_context():
-        from my_app.models import User
+        from my_app.models import User, LocalAuthority
         db.create_all()
-
         # Uncomment the following if you want to experiment with reflection
         # db.Model.metadata.reflect(bind=db.engine)
+
+        # Add the local authority data to the database (this is a workaround you don't need this for your coursework!)
+        csv_file = Path(__file__).parent.parent.joinpath("data/household_recycling.csv")
+        la_data = pd.read_csv(csv_file, usecols=['Code', 'Area'])
+        la_data.drop_duplicates(inplace=True)
+        # la_data.sort_values(by=['Area'], inplace=True)
+        la_data.to_sql('local_authority', db.engine, if_exists='replace')
 
         from dash_app.dash import init_dashboard
         app = init_dashboard(app)
