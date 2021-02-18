@@ -123,7 +123,7 @@ from flask import session
 @app.route('/logout')
 def logout():
    # remove the username from the session if it's there
-   session.pop('username', None)
+   session.pop('name', None)
    return redirect(url_for('index'))
 ```
 
