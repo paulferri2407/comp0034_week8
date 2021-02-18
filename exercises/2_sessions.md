@@ -95,7 +95,7 @@ session['name'] = request.form['email']
 ### 2. Modify the home page to get name from the session object
 I have already removed the cookie code from the last exercise from the index route.
 
-To set the name from the cookie the route will look something like this:
+To set the name from the `session['name']` the route will look something like this:
 
 ```python
 from flask import session
