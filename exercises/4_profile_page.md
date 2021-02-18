@@ -144,9 +144,10 @@ from my_app import photos
 photo = FileField('Profile picture', validators=[FileAllowed(photos, 'Images only!')])
 ```
 
-## Create Profile template
+## Create templates 
+### profile template
 
-Since the process for create and update will be the same we can use one template for both purposes.
+Since the process for create and update will be the same we can use one template, `profile.html` for both purposes.
 
 Create a template as you did for signup and login with the fields from the ProfileForm.
 
@@ -162,7 +163,30 @@ Your form tag will look something like this:
 
 <form method="POST" action="" enctype="multipart/form-data">
 ````
+### display_profile template
 
+Much of the following Jinja2 syntax you should be familiar with by now. However we haven't yet iterated through lists
+which is what the following provides an example of.
+
+This uses a [Bootstrap card](https://getbootstrap.com/docs/5.0/components/card/) layout to display the profile(s).
+
+```jinja2
+{% extends 'layout.html' %}
+{% set title = 'Profile Display' %}
+{% from "_formhelpers.html" import render_field %}
+{% block content %}
+    {% for result, url in profiles %}
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="{{ url }}" alt="User profile photo">
+            <div class="card-body">
+                <h5 class="card-title">{{ result.username }}</h5>
+                <h6>{{ result.area }}</h6>
+                <p class="card-text">{{ result.bio }}</p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+```
 ## Create routes
 
 ### `profile`
@@ -291,31 +315,6 @@ def display_profiles(username=None):
         urls.append(url)
     return render_template('display_profile.html',
                            profiles=zip(results, urls))  # Note the zip to pass both lists as a parameter
-```
-
-## Create the display_profile template
-
-Much of the following Jinja2 syntax you should be familiar with by now. However we haven't yet iterated through lists
-which is what the following provides an example of.
-
-This uses a [Bootstrap card](https://getbootstrap.com/docs/5.0/components/card/) layout to display the profile(s).
-
-```jinja2
-{% extends 'layout.html' %}
-{% set title = 'Profile Display' %}
-{% from "_formhelpers.html" import render_field %}
-{% block content %}
-    {% for result, url in profiles %}
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="{{ url }}" alt="User profile photo">
-            <div class="card-body">
-                <h5 class="card-title">{{ result.username }}</h5>
-                <h6>{{ result.area }}</h6>
-                <p class="card-text">{{ result.bio }}</p>
-            </div>
-        </div>
-    {% endfor %}
-{% endblock %}
 ```
 
 ## Modify the navbar
