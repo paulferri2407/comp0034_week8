@@ -104,7 +104,7 @@ from flask import session
 @main_bp.route('/', defaults={'name': 'Anonymous'})
 @main_bp.route('/<name>')
 def index(name):
-    if session['name']:
+    if 'name' in session:
         name = session['name']
     return render_template('index.html', title='Home page', name=name)
 
