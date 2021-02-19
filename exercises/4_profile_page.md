@@ -22,7 +22,7 @@ that you may need:
 - generating webpages from database content
 - a simple search using SQL queries
 
-##### A note on using Flask-Reuploaded rather than Flask-Upload
+## Configure the app for Flask-Reuploaded
 
 To fully implement the ability to upload a profile image, the Flask documentation recommends using Flask-Uploads.
 However, this library is no longer being maintained and there is a conflict with the latest version of werkzeug (which
@@ -31,8 +31,6 @@ Flask depends on).
 Another library has been released that supersedes Flask-Uploads and addresses the werkzeug
 issue, [Flask-Reuploaded](https://pypi.org/project/Flask-Reuploaded/). This is in requirements.txt so you should already
 have this installed. Many of the code from tutorials for Flask-Upload will work still with Flask-Reuploaded.
-
-## Configure the app for Flask-Reuploaded
 
 You need to modify `config.py` and `__init__.py` in order to make use
 of [Flask-Reuploaded](https://flask-reuploaded.readthedocs.io/en/latest/).
@@ -82,7 +80,7 @@ id: Integer, primary key
 username: Text, Unique, required
 photo: Text
 bio: Text
-local_authority: Text
+area: Text
 user_id: Integer, Foreign key (maps to the id field of the User class)
 ```
 
@@ -109,33 +107,42 @@ Create a ProfileForm class for the community module e.g. in `community/forms.py`
 The fields for a profile are:
 
 - username: StringField, required, must be unique
+- bio: TextAreaField, optional
+- area: [QuerySelectField](http://wtforms.simplecodes.com/docs/0.6/ext.html#module-wtforms.ext.sqlalchemy.fields),
+  optional
 - photo: [Flask-WTF FileField](https://flask-wtf.readthedocs.io/en/stable/form.html#module-flask_wtf.file) and NOT the
   wtf filefield, optional
-- area: [QuerySelectField](http://wtforms.simplecodes.com/docs/0.6/ext.html#module-wtforms.ext.sqlalchemy.fields), optional
-- bio: TextAreaField, optional
+  
+**username and bio**
 
-For the local authority field a list of local authorities has been added to example.sqlite in the local authority table.
-The code to add this is in `__init__.py`.
+You should be able to work out how to create a form with the username and bio fields. In an earlier activity we added a
+custom validation to the email field to check that the email wasn't already in use. This is very similar to the
+validation you added to the signup form for the email field so you should be able to attempt to add this for the
+username too.
 
-You should be able to work out how to create a form with the username and bio fields.
+**area**
 
-The local_authority QuerySelectField is tricky to implement. The following solution provides:
-`query_factory` : the query that returns the list of countries (result objects)
-`get_label` : the column that you want to use as the display of countries from the result, in this case `country_name`
-`allow_blank` : set this to `True`, it places a blank at the start of the list
+A list of areas taken from the recycling dataset has been added to example.sqlite in the area table, and an Area class
+has been added to `models.py`. The code to add the areas to the database is in `__init__.py`. You will query this table
+to return a list of areas that will then be used to populate a dropdown select list to allow users to select the area
+they are interested in.
+
+The area QuerySelectField is more complex to implement. The following solution provides:
+
+- `query_factory`: the query that returns the list of areas (result objects)
+- `get_label`: the column that you want to use as the display of area from the result, in this case `area`
+- `allow_blank`: set this to `True`, it places a blank at the start of the list
 
 ```python
 area = QuerySelectField(label='Your location', query_factory=lambda: Area.query.all(),
-                                   get_label='area', allow_blank=True)
+                        get_label='area', allow_blank=True)
 ```
 
-In the solution in week 8 I also added a custom validation to the username field to check that the username wasn't
-already in use. This is very similar to the validation you added to the signup form for the email field so you should be
-able to attempt to add this for the username too.
+**photos**
 
-The FileField is more tricky. You will need to import the `photos` global that you created and the required imports. The
-following example will create the FileField where the file is optional but if a file is provided then it must be one
-of the types allowed by Flask_Uploads.IMAGES.
+You will need to import the `photos` global that you created and the required imports. The following example will create
+the FileField where the file is optional but if a file is provided then it must be one of the types allowed by
+Flask_Uploads.IMAGES.
 
 ```python
 from flask_wtf.file import FileField, FileAllowed
@@ -144,7 +151,8 @@ from my_app import photos
 photo = FileField('Profile picture', validators=[FileAllowed(photos, 'Images only!')])
 ```
 
-## Create templates 
+## Create templates
+
 ### profile template
 
 Since the process for create and update will be the same we can use one template, `profile.html` for both purposes.
@@ -163,6 +171,7 @@ Your form tag will look something like this:
 
 <form method="POST" action="" enctype="multipart/form-data">
 ````
+
 ### display_profile template
 
 Much of the following Jinja2 syntax you should be familiar with by now. However we haven't yet iterated through lists
@@ -187,6 +196,7 @@ This uses a [Bootstrap card](https://getbootstrap.com/docs/5.0/components/card/)
     {% endfor %}
 {% endblock %}
 ```
+
 ## Create routes
 
 ### `profile`
@@ -228,13 +238,12 @@ similar in your coursework so don't just copy and paste without reading!.
 def create_profile():
     form = ProfileForm()  # This should be familiar from login and signup routes in auth
     if request.method == 'POST' and form.validate_on_submit():
-        u = User.query.filter_by(id=current_user.id)  # Find the current user
         filename = None  # Set the filename for the photo to None since this is the default if the user hasn't chosen to add a profile photo
         if 'photo' in request.files:  # Let's you check the submited form contains a photo (photo is the field name we used in the ProfileForm class)
             if request.files['photo'].filename != '':  # As long as the filename isn't empty then save the photo
                 filename = photos.save(request.files[
                                            'photo'])  # This saves the photo using the global variable photos to get the location to save to
-        p = Profile(area=repr(form.area.data), username=form.username.data, photo=filename, bio=form.bio.data,
+        p = Profile(area=form.area.data.area, username=form.username.data, photo=filename, bio=form.bio.data,
                     user_id=current_user.id)  # Build a new profile to be added to the database based on the fields in the form
         db.session.add(p)  # Add the new Profile to the database session
         db.session.commit()  # This saves the new Profile to the database
