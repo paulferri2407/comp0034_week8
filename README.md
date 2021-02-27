@@ -8,6 +8,6 @@ The following activities are documented in this repository:
 2. Using sessions in Flask
 3. Using Flask-Login
 4. Adding user profile functionality (introduces file uploads and more complex database interactions)
-5. Option activity: Adding charts to a page
+5. Optional activity: Adding charts to a page
 
-If you wish to see a completed example of 3 and 4 then look at the starter code for week 9.
+If you wish to see a completed example of 3, 4 and 5 then look at the starter code for week 9.
