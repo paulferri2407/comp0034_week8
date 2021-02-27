@@ -2,11 +2,11 @@
 
 The previous code examples assume that you are including a Dash app with charts.
 
-You don't have to include Dash, you could simply include charts in the code of a Flask page.
+You don't have to include your Dash app, you could simply include charts in the code of a Flask page.
 
 This example adds two new routes to main for matplotlib and Plotly express charts.
 
-A new menu option 'Charts' has been added to the navbar.
+A new dropdown menu option 'Charts' has been added to the navbar.
 
 ## Adding a matplotlib chart to a page
 
