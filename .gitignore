@@ -212,5 +212,5 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
-!/exercises/pandoc.txt
-!/exercises/githubmarkdown.css
+!/activities/pandoc.txt
+!/activities/githubmarkdown.css

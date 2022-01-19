@@ -1,5 +1,0 @@
-pandoc -V geometry:"top=2cm, bottom=1.5cm, left=2cm, right=2cm" 1_cookies.md -f gfm -o 1_cookies.pdf
-pandoc -V geometry:"top=2cm, bottom=1.5cm, left=2cm, right=2cm" 2_sessions.md -f gfm -o 2_sessions.pdf
-pandoc -V geometry:"top=2cm, bottom=1.5cm, left=2cm, right=2cm" 3_flask_login.md -f gfm -o 3_flask_login.pdf
-pandoc -V geometry:"top=2cm, bottom=1.5cm, left=2cm, right=2cm" 4_profile_page.md -f gfm -o 4_profile_page.pdf
-pandoc -V geometry:"top=2cm, bottom=1.5cm, left=2cm, right=2cm" 5_adding_charts.md -f gfm -o 5_adding_charts.pdf

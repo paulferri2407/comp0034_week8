@@ -1,13 +1,30 @@
-# COMP0034 Week 8 starter code
+# COMP0034 Week 8 activities and starter code
 
-This repository contains the starter code for week 8 and also serves as a completed example of the exercise code from week 7.
+This repository contains the starter code for week 8 in `my_flask_app`. This reflects the code as at the end of week 7.
+If you have been following along with the activities then use your own project code instead.
 
 The following activities are documented in this repository:
 
-1. Using cookies in Flask
-2. Using sessions in Flask
-3. Using Flask-Login
-4. Adding user profile functionality (introduces file uploads and more complex database interactions)
-5. Optional activity: Adding charts to a page
+1. [Using Flask-Login](activities/1_flask_login.md)
+2. [Adding a Dash app to a Flask route and protecting it with Flask-Login](activities/2_add_dash_app.py)
+3. [Adding user profile functionality](activities/3_profile_page.md) (introduces file uploads and
+   more complex database interactions)
+5. Optional activity: [Using cookies in Flask](activities/4_cookies.md)
+6. Optional activity: [Using sessions in Flask](activities/5_sessions.md)
 
-If you wish to see a completed example of 3, 4 and 5 then look at the starter code for week 9.
+If you wish to see a completed example of 1-3 then look at code in `example_app`.
+
+## Set-up
+
+1. Create a repository by using
+   the [Use this template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)
+   green button.
+    - Use the Owner drop-down to select your GitHub account (if not already selected).
+    - Type a name for the repo
+    - Set visibility to private
+    - Leave other options unselected
+    - Select create repository from template
+2. Clone the repository in your IDE
+3. _Create_ and _activate_ a venv e.g. `python3 -m venv venv` then `source venv/bin/activate` (Mac)
+   or `.\env\Scripts\activate` (Windows)
+4. Install the libraries from requirements.txt e.g. `pip install -r requirements.txt`
