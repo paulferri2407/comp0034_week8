@@ -6,58 +6,86 @@ don't have access to this), and the second requires a live hosted Dash app that 
 generally discouraged and further you are not permitted to host a version of your app that could be accessed by others (
 not allowed under the current UCL CS ethics approvals for data sets in this course).
 
-The following solution is based on the 'Dash inside Flask' solution offered
-by [Hackers and Slackers](https://hackersandslackers.com/plotly-dash-with-flask/) with some code from [ned](https://github.com/ned2/slapdash/tree/master/%7B%7Bcookiecutter.project_slug%7D%7D/src/%7B%7Bcookiecutter.project_slug%7D%7D).
-Feel free to implement any other solution you may find.
+The following solution is based on the Dash in Flask with Flask-Login solution offered
+by[How to embed a Dash app into an existing Flask app](https://medium.com/@olegkomarov_77860/how-to-embed-a-dash-app-into-an-existing-flask-app-ea05d7a2210b)
+with the code in [GitHub okomarov](https://github.com/okomarov/dash_on_flask). Feel free to implement any other solution you may find.
 
-They suggest moving the dash directory to within the flask directory. Their directory structure is:
+He suggests moving the dash directory to within the flask directory. 
 
 ```text
-/plotlydash-flask-tutorial
-├── /plotlyflask_tutorial
+/my_project
+├── /my_flask_app
 │   ├── __init__.py
-│   ├── routes.py
+│   ├── app.py
 │   ├── /static
 │   ├── /templates
-│   └── /plotlydash
-│       └── dashboard.py
+│   └── /my_dash_app
+│       └── callbacks.py
+│       └── layout.py
 ├── /data
 ├── README.md
 ├── config.py
 ├── requirements.txt
-├── start.sh
-└── wsgi.py
 ```
-
-The `wsgi.py` in their example correlates to the `app.py` in the `my_flask_app` directory. The app.py doesn't need to be
-edited.
 
 Move the `paralympic_app` package into `my_flask_app`.
 
-The Dash app needs to be modified so that the code is created through functions. In this example the functions are:
-- `create_dash` which creates the Dash app instance
-- `init_layout`  which defines the layout (also includes the code to create the charts), 
-- `init_callbacks` which initialises the call backs.
+## Modify the way the Dash app is created and the layout and callbacks applied
 
-The code in `paralympi_app.py` would look like that contained
-in [/example_app/paralympic_app/paralympic_app.py](../example_app/paralympic_app/paralympic_app.py)
+The Dash app callbacks needs to be modified so that the code is created through a functions.
+The code to create the dash app object and run the server are moved to the `__init__.py` and `create_app`
 
-The `init_app()` function in their examples correlates to the `create_app()` function in our example app. This function
-needs to be edited to import the Dash app, the code needs to be in a context so e.g.
+The code in `paralympic_app.py` has been split into two files, [layout.py](../example_app/paralympic_app/layout.py) and [callbacks.py](../example_app/paralympic_app/callbacks.py).
 
+New functions have been added to [__init__.py](../example_app/__init__.py) and the `create_app` function:
+
+1. To make sure your Dash callbacks work, if you are using CSRFProtect you need to add a line of code to exempt Dash views:
 ```python
-   with app.app_context():
-    from example_app.models import User
+csrf = CSRFProtect()
+csrf._exempt_views.add('dash.dash.dispatch')
+```
 
-    db.create_all()
+2. Add two new functions at the end of __init__.py, e.g.
+```python
+def register_dashapp(app):
+    from example_app.paralympic_app import layout
+    from example_app.paralympic_app.callbacks import register_callbacks
 
-    # Import Paralympics Dash application
-    from .paralympic_app.paralympic_app import create_dash
-    app = create_dash(app)
+    meta_viewport = {"name": "viewport", "content": "width=device-width, initial-scale=1, shrink-to-fit=no"}
+
+    dashapp = dash.Dash(__name__,
+                         server=app,
+                         url_base_pathname='/dashboard/',
+                         assets_folder=get_root_path(__name__) + '/dashboard/assets/',
+                         meta_tags=[meta_viewport],
+                         external_stylesheets=[dbc.themes.SKETCHY])
+
+    with app.app_context():
+        dashapp.title = 'Dashboard'
+        dashapp.layout = layout.layout
+        register_callbacks(dashapp)
+
+    _protect_dash_views(dashapp)
+
+
+def _protect_dash_views(dash_app):
+    for view_func in dash_app.server.view_functions:
+        if view_func.startswith(dash_app.config.routes_pathname_prefix):
+            dash_app.server.view_functions[view_func] = login_required(dash_app.server.view_functions[view_func])
 
 ```
 
-The route is then added to the navbar in navbar.html e.g.
+3. Modify the create_app function to register the dash app after the Flask app is configured and before the extensions are initialised, e.g.
+```python
+def create_app(config_class_name):
+    app = Flask(__name__)
+    app.config.from_object(config_class_name)
+
+    register_dashapp(app)
+```
+
+## Add the Dash route to the navbar
+Add the Dash route to the navbar in navbar.html e.g.
 
 ```html
 
@@ -65,3 +93,5 @@ The route is then added to the navbar in navbar.html e.g.
     <a class="nav-link" href="/dashboard/">Dashboard</a>
 </li>
 ```
+
+Run the app with app.py and click on the Dashboard link in the menu to check that it runs.
