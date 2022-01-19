@@ -7,3 +7,4 @@ Flask-SQLAlchemy
 Flask-Login
 plotly
 Flask-Reuploaded
+geopandas

@@ -1,5 +1,5 @@
 """Flask config class."""
-import pathlib
+from pathlib import Path
 
 
 class Config(object):
@@ -14,8 +14,9 @@ class Config(object):
     SECRET_KEY = 'generate_a_secret_key'
     WTF_CSRF_SECRET_KEY = "crFAuXFCPKbKWw8JAKfnSA"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + str(pathlib.Path(__file__).parent.joinpath('my_example.sqlite'))
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///' + str(Path(__file__).parent.joinpath('my_example.sqlite'))
     TESTING = False
+    UPLOADED_PHOTOS_DEST = Path(__file__).parent.joinpath("static/img")
 
 
 class ProductionConfig(Config):

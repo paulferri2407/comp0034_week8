@@ -20,3 +20,19 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+class Profile(db.Model):
+    __tablename__ = "profile"
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.Text, unique=True, nullable=False)
+    photo = db.Column(db.Text)
+    bio = db.Column(db.Text)
+    region_id = db.Column(db.Integer, db.ForeignKey('region.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+class Region(db.Model):
+    __tablename__ = "region"
+    id = db.Column(db.Integer, primary_key=True)
+    region = db.Column(db.Text)

@@ -29,7 +29,7 @@ about a specific user from one request to the next. They work by storing a crypt
 browser and decoding it on every request.
 
 The session object can be treated just like a dictionary that persists across requests, making it an ideal place to
-store non sensitive user data.
+store non-sensitive user data.
 
 The user could look at the contents of your cookie but not modify it, unless they know the secret key used for signing.
 
@@ -40,12 +40,12 @@ of [this tutorial by Julian Nash on pythonise.com](https://pythonise.com/series/
 
 ### Using sessions in Flask
 
-You must set a Flask secret key to use sessions e.g. in config.py:
+You must set a Flask `SECRET_KEY' to use sessions e.g. in config.py:
 
 ```python
-app.config["SECRET_KEY"] = “DkqwPYJSvITmwS_W0jvPzA”
+app.config["SECRET_KEY"] = 'my_secret_key'
 # or
-app.secret_key = `DkqwPYJSvITmwS_W0jvPzA`
+app.secret_key = 'my_secret_key'
 ```
 
 To generate your own secret_key try the following in a Python console:
@@ -72,79 +72,11 @@ session['username’]
 session.pop('username’)
 ```
 
-## Using sessions in our example Flask app
+## Using sessions - examples
 
-Let's apply this to create a basic login/logout to our Flask app.
+**Note**: You are unlikely to need to create sessions explicitly in the coursework. Flask-Login uses sessions however it
+creates and manages these for you.
 
-The Login/Logout routes in this example won't fully manage login and logout, all they will do is set and delete the
-session cookie so that you can see how sessions work.
-
-The secret key was set in `config.py` in an earlier activity so we do not need to create this again.
-
-### 1. Modify the login route to set a session
-
-The login form currently has email and password.
-
-Modify the login route so that when the login form is submitted the session object is set with a 'name' parameter using
-is the email address from the login form.
-
-```python
-session['name'] = request.form['email']
-```
-
-### 2. Modify the home page to get name from the session object
-I have already removed the cookie code from the last exercise from the index route.
-
-To set the name from the `session['name']` the route will look something like this:
-
-```python
-from flask import session
-
-
-@main_bp.route('/', defaults={'name': 'Anonymous'})
-@main_bp.route('/<name>')
-def index(name):
-    if 'name' in session:
-        name = session['name']
-    return render_template('index.html', title='Home page', name=name)
-
-```
-
-### 3. Create a logout route
-
-Add a new route for logout to the auth module.
-
-The route returns to the home page so we don't need to create a logout template.
-
-```python
-from flask import session
-
-
-@auth_bp.route('/logout')
-def logout():
-    session.pop('name', None)
-    return redirect(url_for('main.index'))
-```
-
-### 4. Test that it works and view the session cookie that is set
-1. Start the Flask app
-
-2. Open Chrome
-   - Open the developer tools
-   - Select the Application tab along the top of the toolbar
-   - Select Cookies from the sidebar on the left
-
-3. Login
-   - Go to http://localhost:5000/login/ in Chrome.
-   - Enter any email address and password and submit the form.
-   - The index page should show the email address you just entered on the login form.
-   - You should see the session in the Cookies section of the Developer Tools pane in Chrome.
-
-4. Logout
-   - enter http://localhost:5000/logout/
-
-**Note**: You are unlikely to need to create sessions explicitly in the coursework.
-
-The code that you just used will be replaced in the next activity when we use Flask-Login.
-
-Flask-Login uses sessions however it creates and manages these for you.
+There are plenty of freely available Flask sessions tutorials. Code
+from [Flask Sessions](https://testdriven.io/blog/flask-sessions/) has been created in sessions.py if you want to follow
+the tutorial and experiment with it.

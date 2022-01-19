@@ -19,3 +19,10 @@ class User(db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+
+class Region(db.Model):
+    __tablename__ = "region"
+    id = db.Column(db.Integer, primary_key=True)
+    noc = db.Column(db.Text, unique=True, nullable=False)
+    region = db.Column(db.Text)

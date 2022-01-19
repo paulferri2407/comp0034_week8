@@ -1,11 +1,14 @@
-# Add profiles to the community pages
+# Create a profile page
 
-In this activity you will allow users to save profile information about themselves and the provide a simple search that
-allows a user name to be searched for and the profile to be displayed as a result.
+This is a challenging activity. You are deliberately not given all the code, only text explanation of the program
+logic, so that you challenge your understanding of how to create features in Flask.
+
+In this activity you will allow users to save profile information about themselves and provide a simple search that
+allows a username to be searched for and the profile to be displayed as a result.
 
 To achieve this you will need to:
 
-- configure the app to use Flask-Reuploaded
+- configure the app to use Flask-Reuploaded (or an alternative)
 - create a profile model class
 - create a profile form class
 - create templates for creating, updating and displaying a profile
@@ -35,14 +38,15 @@ have this installed. Many of the code from tutorials for Flask-Upload will work 
 You need to modify `config.py` and `__init__.py` in order to make use
 of [Flask-Reuploaded](https://flask-reuploaded.readthedocs.io/en/latest/).
 
-In `config.py` in the Config class add the following which will set the path for photos to `my_app/static/img`:
+In `config.py` in the Config class add the following which will set the path for photos to `my_app/static/img` (remember
+to create the 'img' directory):
 
 ```python
 class Config(object):
     UPLOADED_PHOTOS_DEST = Path(__file__).parent.joinpath("static/img")
 ```
 
-In `my_app/__init__.py`:
+In `my_flask_app/__init__.py`:
 
 - add the imports (note you still call it flask_uploads even though we are using Flask_Reuploaded)
 - create the global variable for photos (where you declare other globals such as `db = SQLAlchemy()`). The variable
@@ -79,8 +83,7 @@ You will need to create a Profile class in the models.py which has a relationshi
 id: Integer, primary key
 username: Text, Unique, required
 photo: Text
-bio: Text
-area: Text
+region_id: Integer, Foreign key (maps to the id field of the Region class)
 user_id: Integer, Foreign key (maps to the id field of the User class)
 ```
 
@@ -97,22 +100,22 @@ the filename in the database, or you can convert the image to binary data and st
 the first approach as this will be consistent with the documentation for using Flask-Reuploaded and Flask-WTF.FileField
 in the next step of this activity.
 
-Once you have created the Profile class you need to ensure that it is created in the database by adding the import to
-the `__init__.py` just before `db.create_all()`.
+Once you have created the Profile class you need to ensure that it is created as a table in the database by adding the
+import to the `__init__.py` just before `db.create_all()`.
 
 ## Create a profile form class
 
-Create a ProfileForm class for the community module e.g. in `community/forms.py`
+Create a ProfileForm class for the main module e.g. in `main/forms.py`
 
 The fields for a profile are:
 
 - username: StringField, required, must be unique
 - bio: TextAreaField, optional
-- area: [QuerySelectField](http://wtforms.simplecodes.com/docs/0.6/ext.html#module-wtforms.ext.sqlalchemy.fields),
-  optional
-- photo: [Flask-WTF FileField](https://flask-wtf.readthedocs.io/en/stable/form.html#module-flask_wtf.file) and NOT the
-  wtf filefield, optional
-  
+- region_id: [SelectField](https://wtforms.readthedocs.io/en/3.0.x/fields/#wtforms.fields.SelectField) with dynamic
+  choice values, optional
+- photo: [Flask-WTF FileField](https://flask-wtf.readthedocs.io/en/1.0.x/form/?highlight=FileField#file-uploads) and NOT
+  the wtf filefield, optional
+
 **username and bio**
 
 You should be able to work out how to create a form with the username and bio fields. In an earlier activity we added a
@@ -120,23 +123,12 @@ custom validation to the email field to check that the email wasn't already in u
 validation you added to the signup form for the email field so you should be able to attempt to add this for the
 username too.
 
-**area**
+**country**
 
-A list of areas taken from the recycling dataset has been added to example.sqlite in the area table, and an Area class
-has been added to `models.py`. The code to add the areas to the database is in `__init__.py`. You will query this table
-to return a list of areas that will then be used to populate a dropdown select list to allow users to select the area
-they are interested in.
-
-The area QuerySelectField is more complex to implement. The following solution provides:
-
-- `query_factory`: the query that returns the list of areas (result objects)
-- `get_label`: the column that you want to use as the display of area from the result, in this case `area`
-- `allow_blank`: set this to `True`, it places a blank at the start of the list
-
-```python
-area = QuerySelectField(label='Your location', query_factory=lambda: Area.query.all(),
-                        get_label='area', allow_blank=True)
-```
+A list of regions taken from the noc_regions dataset has been added to the SQLite database in the 'region' table, and a
+Region class has been added to `models.py`. The code to add the regions to the database is in `__init__.py`. When you
+create the route you will query this table to return a list of regions that will then be used to populate a dropdown
+select list to allow users to select the region they are in.
 
 **photos**
 
@@ -146,7 +138,7 @@ Flask_Uploads.IMAGES.
 
 ```python
 from flask_wtf.file import FileField, FileAllowed
-from my_app import photos
+from my_flask_app import photos
 
 photo = FileField('Profile picture', validators=[FileAllowed(photos, 'Images only!')])
 ```
@@ -189,7 +181,7 @@ This uses a [Bootstrap card](https://getbootstrap.com/docs/5.0/components/card/)
             <img class="card-img-top" src="{{ url }}" alt="User profile photo">
             <div class="card-body">
                 <h5 class="card-title">{{ result.username }}</h5>
-                <h6>{{ result.area }}</h6>
+                <h6>{{ result.region }}</h6>
                 <p class="card-text">{{ result.bio }}</p>
             </div>
         </div>
@@ -201,23 +193,23 @@ This uses a [Bootstrap card](https://getbootstrap.com/docs/5.0/components/card/)
 
 ### `profile`
 
-This route is actioned when a user tries to create a profile using `/community/profile`. If they already have a profile
+This route is actioned when a user tries to create a profile using `/profile`. If they already have a profile
 they are directed to the update_profile route, otherwise they are directed to the create_profile route.
 
 The following is given in pseudo code. Try and work out the Python syntax for yourself.
 
 ```python
-@community_bp.route('/profile', methods=['GET', 'POST'])
+@main_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
 # create a variable that is the result of a query. Query the Profile by joining the User and filtering where the user.id is the same as current_user.id. The structure of the query will be Profile.query.join().filter().first()
 # if there is a profile
-# return a redirect to the url_for community.update_profile
+# return a redirect to the url_for main.update_profile
 # else
-# return a redirect to the url_for community.create_profile
+# return a redirect to the url_for main.create_profile
 ```
 
-Test it by signing up, logging in and then go to http://127.0.0.1:5000/community/profile
+Test it by signing up, logging in and then go to http://127.0.0.1:5000/profile
 This should return a 404 error as neither of the routes exists yet.
 
 ### `create_profile`
@@ -233,7 +225,7 @@ The following code is explained for this route. You will need to understand this
 similar in your coursework so don't just copy and paste without reading!.
 
 ```python
-@community_bp.route('/create_profile', methods=['GET', 'POST'])
+@main_bp.route('/create_profile', methods=['GET', 'POST'])
 @login_required
 def create_profile():
     form = ProfileForm()  # This should be familiar from login and signup routes in auth
@@ -247,12 +239,12 @@ def create_profile():
                     user_id=current_user.id)  # Build a new profile to be added to the database based on the fields in the form
         db.session.add(p)  # Add the new Profile to the database session
         db.session.commit()  # This saves the new Profile to the database
-        return redirect(url_for('community.display_profiles', username=p.username))
+        return redirect(url_for('main.display_profiles', username=p.username))
     return render_template('profile.html', form=form)
 ```
 
-Test it by signing up, logging in and then go to http://127.0.0.1:5000/community/profile. You should be redirected
-to http://127.0.0.1:5000/community/create_profile
+Test it by signing up, logging in and then go to http://127.0.0.1:5000/profile. You should be redirected
+to http://127.0.0.1:5000/create_profile
 Fill out the profile form and press save. You will need to check in the database to see if the profile was saved.
 
 ### `update_profile`
@@ -263,10 +255,10 @@ existing values (except for the file select field).
 The following is a little crude as we overwrite all the fields each time regardless of whether a change was made.
 
 ```python
-@community_bp.route('/update_profile', methods=['GET', 'POST'])
+@main_bp.route('/update_profile', methods=['GET', 'POST'])
 @login_required
 def update_profile():
-    profile = Profile.query.join(User).filter_by(id=current_user.id).first()  # Find the existing profile for this user
+    profile = Profile.query.join(User, User.id == Profile.user_id).filter_by(id=current_user.id).first()  # Find the existing profile for this user
     form = ProfileForm(
         obj=profile)  # Pre-populate the form by loading the profile using obj=. This relies on the field names in the Profile class in model matching the field names in the ProfileForm class, otherwise you have to explicitly state each field e.g. if the form used bio and the model used biography you would need to add  bio = profile.biography
     if request.method == 'POST' and form.validate_on_submit():
@@ -277,7 +269,7 @@ def update_profile():
         profile.bio = form.bio.data  # Updates the bio field
         profile.username = form.username.data  # Updates the user field
         db.session.commit()  # Save the changes to the database
-        return redirect(url_for('community.display_profiles', username=profile.username))
+        return redirect(url_for('main.display_profiles', username=profile.username))
     return render_template('profiles.html', form=form)
 ```
 
@@ -299,8 +291,8 @@ we append the url for each photo.
 We then use the python zip() function to pass both lists to the template.
 
 ```python
-@community_bp.route('/display_profiles', methods=['POST', 'GET'])
-@community_bp.route('/display_profiles/<username>/', methods=['POST', 'GET'])
+@main_bp.route('/display_profiles', methods=['POST', 'GET'])
+@main_bp.route('/display_profiles/<username>/', methods=['POST', 'GET'])
 @login_required
 def display_profiles(username=None):
     results = None
@@ -309,13 +301,13 @@ def display_profiles(username=None):
             term = request.form['search_term']
             if term == "":
                 flash("Enter a name to search for")
-                return redirect(url_for("community.index"))
+                return redirect(url_for("main.index"))
             results = Profile.query.filter(Profile.username.contains(term)).all()
     else:
         results = Profile.query.filter_by(username=username).all()
     if not results:
         flash("No users found.")
-        return redirect(url_for("community.index"))
+        return redirect(url_for("main.index"))
     # The following iterates through the results and adds the full url to a list of urls
     urls = []
     for result in results:
@@ -330,15 +322,15 @@ def display_profiles(username=None):
 
 ### Enable the search in the navbar
 
-We already have the routes that carries out the search, `display_profiles` so now we just need to enable our navbar.
+We already have the routes that carry out the search, `display_profiles` so now we just need to enable our navbar.
 
 Find the search form in the navbar template.
 
-Change the form tag so the action is {{ url_for("community.display_profiles") }} and the method is post.
+Change the form tag so the action is {{ url_for("main.display_profiles") }} and the method is post.
 
 Try and search for a username. Did you get an error indicating you need to implement csrf protection? This form wasn't
 created using FlaskForm, it is a simple HTML form, so you need
-to [implement the CSRF according to the documentation](https://flask-wtf.readthedocs.io/en/stable/csrf.html#html-forms).
+to [implement the CSRF according to the documentation](https://flask-wtf.readthedocs.io/en/1.0.x/csrf/?highlight=html%20forms#html-forms).
 
 This is a simplistic search and simply looks for matching usernames. If you want to implement a full text search then
 try [Miguel Grinberg's tutorial on using Elasticsearch with Flask](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xvi-full-text-search)

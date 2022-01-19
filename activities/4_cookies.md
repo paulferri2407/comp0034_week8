@@ -71,8 +71,9 @@ def index():
     response = make_response(render_template('index.html'))
     response.set_cookie('username', 'the username')
     return response
+```
 
-
+```python
 # Read a cookie
 from flask import request
 
@@ -94,112 +95,13 @@ The syntax to set a cookie is `set_cookie(key, value="", max_age=None)` where
 So `set_cookie('foo', 'bar', max_age=60*60*24*365)` would set a cookie called ‘foo’ with a value of ‘bar’ to expire in 1
 year.
 
-## Example using cookies in Flask
+## Examples using cookies in Flask
 
-This example builds on the signup code that was created last week.
+It is unlikely you will need to implement cookies for your coursework.
 
-The example works through the following steps:
+If you want to experiment there are many tutorials and examples on the internet. The code for the first of those below
+is in `sessions_and_cookies` app in the project folder:
 
-- Create a cookie in the signup route as soon as a new user has been successfully created. The cookie should use the
-  value of the first_name field from the form to create a cookie called name.
-- To see the value of the cookie, modify the `index` page to display a welcome message with the name value if a cookie
-  has been set. To read a cookie, you need to access the request object.
-- Signup a new user. You should be directed to the `index` page after a successful signup which should have the
-  content "Welcome <name>".
-- Add a new route to delete the cookie, this is just so that we can see the effect on the index page after the cookie is
-  deleted. To delete a cookie, you set its expiration as a date in the past.
-- Go to http://127.0.0.1:5000/delete_cookie. You should be directed to the `index` page which should now display "
-  Welcome".
-
-### 1. Create a cookie in the signup route
-
-Create a cookie in the signup route as soon as a new user has been successfully created.
-
-The cookie should use the value of the first_name field from the form to create a cookie called name.
-
-After creating the cookie, the user should be directed to the home page.
-
-To set the cookie you need to:
-
-- create a response (in this case the response is to redirect to the URL for the home page)
-- set the cookie for the response, the cookie is called `name` and the value for the name is captured in the
-  form.first_name field.
-- return the response
-
-You will need to add an import `from flask import make_response`.
-
-Find the appropriate location in your signup route and add the following:
-
-```python
-from flask import make_response
-
-response = make_response(redirect(url_for('main.index')))
-response.set_cookie("name", user.firstname)
-return response
-```
-
-We also need to change the `main.index` route to allow a `name` parameter to be passed:
-
-```python
-@main_bp.route('/', defaults={'name': 'Anonymous'})
-@main_bp.route('/<name>')
-def index(name):
-    return render_template('index.html', title="Home page", name=name)
-```
-
-And modify the `index.html` to display the name parameter:
-
-```html
-{% extends 'layout.html' %}
-{% block content %}
-<h1>{{ title }}</h1>
-<p>Welcome {{ name }}</p>
-<p>This is the my_app home page.</p>
-{% endblock %}
-```
-
-Run the Flask app to check that the `main.index` is displayed with the name 'Anonymous'.
-
-### 2. Access the value of the cookie and pass it to the index page to customise the text
-
-To see the value of the cookie, let's modify the `index` page to display a welcome message with the name value if a
-cookie has been set.
-
-To read a cookie, you need to access the request object.
-
-```python 
-@main_bp.route('/', defaults={'name': 'Anonymous'})
-@main_bp.route('/<name>')
-def index(name):
-    if 'name' in request.cookies:
-        name = request.cookies.get('name')
-    return render_template('index.html', title='Home page', name=name)
-```
-
-Sign up a new user. You should be directed to the `index` page after a successful signup which should have the
-content `Welcome! name`.
-
-### 3. Add a new route to delete the cookie
-
-This is only so that we can see the effect on the index page after the cookie is deleted.
-
-To delete a cookie, you set its expiration as a date in the past.
-
-```python
-@main_bp.route('/delete_cookie')
-def delete_cookie():
-    response = make_response(redirect(url_for('main.index')))
-    response.set_cookie('name', '', expires=datetime.now())
-    return response
-```
-
-Go to http://127.0.0.1:5000/delete_cookie.
-
-You should be directed to the `index` page which should now display `Welcome Anonymous`.
-
-
-> **Note**: It is unlikely you will need to use cookies for the coursework. You can remove the above code from the signup route as we don't need it for any later activities.
-
-
-
-
+- [Flask cookies](https://pythonise.com/series/learning-flask/flask-cookies)
+- [Cookies in Flask](https://overiq.com/flask-101/cookies-in-flask/)
+- [Cookies in Flask](https://cs.wellesley.edu/~webdb/lectures/cookies/index.html#cookies-in-flask)

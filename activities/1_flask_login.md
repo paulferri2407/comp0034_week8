@@ -54,11 +54,10 @@ In this activity we will explain the steps to configure and use Flask-Login, and
 1. Configure the application to use Flask-Login
 2. Add the required helper functions from UserMixin to the User class
 3. Add the required user loader function to the auth routes
-3. Add the required helper functions to manage safe redirects to the auth routes
-4. Add custom feedback for unauthorised access to pages
-5. Add/update the routes for login and logout to the auth routes
-6. Add login/logout to the navbar
-7. Require a user to be logged in to access the community pages
+4. Add the required helper functions to manage safe redirects to the auth routes
+5. Add custom feedback for unauthorised access to pages
+6. Add/update the routes for login and logout to the auth routes
+7. Add login/logout to the navbar
 8. Modify the homepage to check if a user is logged in
 9. Try it!
 
@@ -289,13 +288,7 @@ We can use this to check which of the options to display in the navbar e.g.
 {% endif %}
 ```
 
-### 7. Require a user to be logged in to access pages
-
-You have already used the @login_required decorator to the logout function.
-
-Add this to any other routes that you wish the user to be logged in before they can view it.
-
-### 8. Modify the homepage to check if a user is logged in
+### 7. Modify the homepage to check if a user is logged in
 
 This is optional and is included as an example of how you can use access logged in status within your routes.
 
@@ -329,3 +322,6 @@ Try out the following:
 - Close the browser and reopen within a minute, you should still be logged in (logout shows in the navbar)
 - Close the browser and wait longer than a minute, you should be logged out (login shows in the navbar)
 - Choose Logout from the navbar, you should be logged out (login shows in the navbar)
+
+You have already used the @login_required decorator to the logout function. Add this to any other routes that you wish
+the user to be logged in before they can view it.
