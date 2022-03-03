@@ -7,7 +7,7 @@ Rather than try to fit a multi-page Dash app into Flask, consider adding each Da
 the routing.
 
 The Dash documentation recommends using iFrames (see Embed your Dash app in other websites), however this assumes you
-have a live server and are using the Dash enterprise middleware (which you aren't).
+have a live server (which you don't) and are using the Dash enterprise middleware (which you aren't).
 
 A further complexity for the coursework may arise if you wish to protect a Dash app using Flask-Login.
 
