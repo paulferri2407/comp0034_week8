@@ -1,7 +1,5 @@
 # COMP0034 Week 8 activities and starter code
 
-TODO: Dash callbacks not working in example_app
-
 This repository contains the starter code for week 8 in `my_flask_app`. This reflects the code as at the end of week 7.
 If you have been following along with the activities then use your own project code instead.
 
