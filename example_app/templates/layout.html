@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.js') }}" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+            integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+            async></script>
     <title>{{ title }}</title>
+    {% block extra_tags %}{% endblock %}
 </head>
 <body>
 <header class="container-fluid">

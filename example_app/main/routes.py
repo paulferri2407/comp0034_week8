@@ -1,3 +1,6 @@
+import os
+import pandas as pd
+
 from flask import Blueprint, render_template, flash, redirect, url_for, request
 from flask_login import current_user, login_required
 
@@ -11,10 +14,19 @@ main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
 def index():
+    img_list = []
+    for filename in os.listdir('static/images/logos'):
+        img_list.append(filename)
+    img_df = pd.DataFrame(img_list, columns=['filename'])
+    img_df['year'] = img_df['filename'].str[:4]
+    img_df['event'] = img_df['filename'].str[5:-4]
     if not current_user.is_anonymous:
         name = current_user.first_name
         flash(f'Hello {name}. ')
-    return render_template('index.html', title='Home page')
+    img_df.sort_values(by=['year'], inplace=True)
+    img_df.reset_index(inplace=True, drop=True)
+    images = img_df.values.tolist()
+    return render_template('index.html', title='Home page', images=images)
 
 
 @main_bp.route('/profile', methods=['GET', 'POST'])

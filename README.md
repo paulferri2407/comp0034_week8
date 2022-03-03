@@ -9,10 +9,11 @@ The following activities are documented in this repository:
 
 1. [Using Flask-Login](activities/1_flask_login.md)
 2. [Adding a Dash app to a Flask route and protecting it with Flask-Login](activities/2_add_dash_app.py)
-3. [Adding user profile functionality](activities/3_profile_page.md) (introduces file uploads and
+3. Optional activity: [Adding user profile functionality](activities/3_profile_page.md) (introduces file uploads and
    more complex database interactions)
-5. Optional activity: [Using cookies in Flask](activities/4_cookies.md)
-6. Optional activity: [Using sessions in Flask](activities/5_sessions.md)
+4. Optional activity: [Using cookies in Flask](activities/4_cookies.md)
+5. Optional activity: [Using sessions in Flask](activities/5_sessions.md)
+6. Required activity: [Using Flask-SQLAlchemy for database interaction part 2](activities/6_database_2.md)
 
 If you wish to see a completed example of 1-3 then look at code in `example_app`.
 
