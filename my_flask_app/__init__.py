@@ -40,7 +40,7 @@ def add_noc_data(db_name):
     :param db_name: the SQLite database initialised for the Flask app
     :type db_name: SQLAlchemy object
     """
-    filename = Path(__file__).parent.joinpath('paralympic_app', 'data', 'noc_regions.csv')
+    filename = Path(__file__).parent.parent.joinpath('paralympic_app', 'data', 'noc_regions.csv')
     df = pd.read_csv(filename, usecols=['region'])
     df.dropna(axis=0, inplace=True)
     df.drop_duplicates(subset=['region'], keep='first', inplace=True)
