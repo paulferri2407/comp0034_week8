@@ -182,7 +182,6 @@ Post.query.first()
 Comment.query.all()
 User.query.filter_by(username=User'uname1').first()
 Post.query.filter(Student.email.contains(partial_term)).all()
-Post.query.join(Comment).all()
 # create variables with the objects in the query results e.g.
 post = Post.query.first()
 print(f"Title: {post.post_title} \nPost: {post.post_text}")
@@ -223,6 +222,10 @@ def validate_email(self, email):
       db.session.rollback()
   ```
 
-## Further examples and documentation
+## Further examples
 
 - [Intro to Flask-SQLAlchemy queries (video)](https://www.youtube.com/watch?v=JKoxrqis0Co)
+- [Flask SQLAlchemy simple queries](https://www.kevin7.net/post_detail/flask-sqlalchemy-simple-queries) - includes joins and querying many to many relationships
+- [Miguel Grinberg's chapter on databases](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-iv-database)
+- [Hackers and Slackers post on SQLAlchemy relationships](https://hackersandslackers.com/sqlalchemy-data-models/)
+- [Patrick Kennedy on database relationships](https://www.patricksoftwareblog.com/database-relationships/)
