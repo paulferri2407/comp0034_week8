@@ -120,7 +120,37 @@ class User(UserMixin, db.Model):
 
 ```
 
+
+
+
+
 ### 3. User loader
+
+> #### What are sessions?
+>
+> Before moving to the next step you need to understand what sessions are.
+>
+> A session is an abstract concept to represent a series of HTTP requests and responses between a specific Web browser and
+server. HTTP doesn't support the notion of a session, but Python does.
+>
+> A cookie is a small piece of data stored on the client's computer. A session's data is stored on the server (one session
+per client). Sessions are often built on top of cookies. A client's browser makes an initial request to the server. The
+server notes client's IP address/browser, stores some local session data, and sends a session ID back to client. The
+client stores a cookie holding a unique session ID. On each subsequent page request, the client sends its session ID
+cookie, and the server uses this to find and retrieve the client's session data.
+>
+> Sessions in Flask are a way to store information about a specific user from one request to the next. They work by
+storing a cryptographically signed cookie on the users browser and decoding it on every request. The session object can
+be treated just like a dictionary that persists across requests, making it an ideal place to store non-sensitive user
+data. The user could look at the contents of your cookie but not modify it, unless they know the secret key used for
+signing.
+>
+> However, the session object is NOT a secure way to store data. It's a base64 encoded string and can easily be decoded,
+thus not making it a secure way to save or access sensitive information. An example of decoding the session data is
+shown at the end of
+this [tutorial by Julian Nash on pythonise.com](https://pythonise.com/series/learning-flask/flask-session-object).
+>
+> You do not have to do anything to establish and use sessions, Flask-Login handles this for you.
 
 You will have to provide a `user_loader` callback function that reloads a user from the session that takes a user ID and
 returns a user object or None if the user does not exist.
@@ -138,6 +168,7 @@ def load_user(user_id):
         return User.query.get(user_id)
     return None
 ```
+
 
 ### 4. Helper functions to manage safe redirects
 
@@ -276,14 +307,14 @@ We can use this to check which of the options to display in the navbar e.g.
 ```jinja2
 {% if current_user.is_anonymous %}
     <li class="nav-item">
-        <a class="nav-link" href="{{ url_for("auth.login") }}">Login</a>
+        <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
     </li>
     <li class="nav-item">
-         <a class="nav-link" href="{{ url_for("auth.signup") }}">Sign up</a>
+         <a class="nav-link" href="{{ url_for('auth.signup') }}">Sign up</a>
     </li>
 {% else %}
    <li class="nav-item">
-       <a class="nav-link" href="{{ url_for("auth.logout") }}">Logout</a>
+       <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
    </li>
 {% endif %}
 ```

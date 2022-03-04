@@ -14,9 +14,6 @@ Consider the following ERD:
 The classes and attributes be created as follows:
 
 ```python
-from database_example import db
-
-
 class User(db.Model):
     __tablename__ = "user"
     user_id = db.Column(db.Integer, primary_key=True)
@@ -33,6 +30,9 @@ class Post(db.Model):
     author_id = db.Column(db.Integer, nullable=False)
     post_title = db.Column(db.Text, nullable=False)
     post_text = db.Column(db.Text, nullable=False)
+    
+    def __repr__(self):
+        return '<Post %r>' % self.post_text
 
 
 class Comment(db.Model):
@@ -41,6 +41,9 @@ class Comment(db.Model):
     commenter_id = db.Column(db.Integer, nullable=False)
     post_id = db.Column(db.Integer, nullable=False)
     comment_text = db.Column(db.Text, nullable=False)
+
+    def __repr__(self):
+        return '<Comment %r>' % self.comment_text
 
 ```
 
@@ -180,8 +183,8 @@ SQLAlchemy provides methods that will generate the SQL on execution. Try the fol
 User.query.all()
 Post.query.first()
 Comment.query.all()
-User.query.filter_by(username=User'uname1').first()
-Post.query.filter(Student.email.contains(partial_term)).all()
+User.query.filter_by(username='uname1').first()
+Post.query.filter(User.username.contains('uname'), User.user_id == Post.author_id).all()
 # create variables with the objects in the query results e.g.
 post = Post.query.first()
 print(f"Title: {post.post_title} \nPost: {post.post_text}")
