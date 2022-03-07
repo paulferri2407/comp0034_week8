@@ -10,6 +10,9 @@ Use the guidance in [1_flask_login.md](https://github.com/nicholsons/comp0034_we
 - Add login/logout to the navbar
 - Require a user to be logged in to access the some of the pages of your web app
 
+
+Note: If you wish to restrict your Dash app to logged in users then you will need to follow the guidance in the Dash app activities.
+
 ## Add your Dash app to your Flask app
 There is guidance for adding a single page app in [2_add_dash_app.md](2_add_dash_app.md) ([video here](https://echo360.org.uk/ui/player/7769f41e-a094-4aa2-b32a-a719a6b02572?secureLinkAccessDataId=3fd22af1-ed62-413f-ac43-c2610ff3df4d&autoplay=false&automute=false)) and for adding a multi page app in [2_2_adding_multiple_dash_apps.md](2_2_adding_multiple_dash_apps.md).
 
