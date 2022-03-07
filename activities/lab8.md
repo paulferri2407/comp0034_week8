@@ -1,7 +1,7 @@
 # Lab 8
 
 ## Implement login for your app
-Implement login functionality for your web app. You will likely need to:
+Use the guidance in [1_flask_login.md](https://github.com/nicholsons/comp0034_week8/blob/master/activities/1_flask_login.md) to implement login functionality for your web app. You will likely need to:
 
 - Configure the application to use Flask-Login
 - Add the required helper functions from UserMixin to your User class (or the appropriate class for your application)
