@@ -11,14 +11,9 @@ Implement login functionality for your web app. You will likely need to:
 - Require a user to be logged in to access the some of the pages of your web app
 
 ## Add your Dash app to your Flask app
-.....
+There is guidance for adding a single page app in [2_add_dash_app.md](2_add_dash_app.md) and for adding a multi page app in [2_2_adding_multiple_dash_apps.md](2_2_adding_multiple_dash_apps.md)
 
 ## Implement features for your web app
 Since the nature of each person or group's project is very different then you will need to work out which features you will start to work on and who does what.
 
-There are links in the reading list for this week to some Flask tutorials and packages that cover the types of community features you might want to implement such as:
-
-- [Miguel Grinberg's mega tutorial (blog)](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
-- [Flask tutorial (Flaskr blog)](https://flask.palletsprojects.com/en/1.1.x/tutorial/)
-- [FlaskBB for forums](https://flaskbb.org)
-- [Messaging/chat using flask-socketio](https://blog.miguelgrinberg.com/post/easy-websockets-with-flask-and-gevent)
+There are links in the reading list for this week to some Flask tutorials and packages that cover the types of community features you might want to implement; there are also links in a week 8 optional [Moodle activity here](https://moodle.ucl.ac.uk/mod/page/view.php?id=3398136).
